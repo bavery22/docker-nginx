@@ -99,6 +99,13 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 
 EXPOSE 80
 
+## set up sstate location
+COPY sstate-location.conf /tmp
+RUN cp /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.orig && \
+    sed -i 'x;${s/}$//;p;x;};1d' /etc/nginx/conf.d/default.conf && \
+    cat /tmp/sstate-location.conf >> /etc/nginx/conf.d/default.conf && \
+    rm /tmp/sstate-location.conf 
+
 STOPSIGNAL SIGTERM
 
 CMD ["nginx", "-g", "daemon off;"]
